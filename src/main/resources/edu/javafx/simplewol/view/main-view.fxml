@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="675.0" prefWidth="820.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.javafx.simplewol.controller.MainViewController">
+<BorderPane prefHeight="675.0" prefWidth="820.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.javafx.simplewol.controller.MainViewController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
          <menus>
@@ -40,7 +40,7 @@
    <center>
       <AnchorPane prefHeight="406.0" prefWidth="820.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="buttonWakeUp" layoutX="618.0" layoutY="252.0" mnemonicParsing="false" onAction="#onClick" prefHeight="56.0" prefWidth="82.0" text="Wake Up!" />
+            <Button fx:id="buttonWakeUp" layoutX="618.0" layoutY="252.0" mnemonicParsing="false" onAction="#wakeUpPressed" prefHeight="56.0" prefWidth="82.0" text="Wake Up!" />
             <TextField fx:id="textFieldIp" alignment="CENTER_RIGHT" layoutX="99.0" layoutY="47.0" prefHeight="45.0" prefWidth="200.0" promptText="000.000.000.000">
                <font>
                   <Font name="System Bold" size="20.0" />
@@ -88,7 +88,7 @@
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="buttonWakeUp1" mnemonicParsing="false" onAction="#onClick" prefHeight="20.0" prefWidth="100.0" text="Save">
+                  <Button fx:id="buttonWakeUp1" mnemonicParsing="false" onAction="#savePressed" prefHeight="20.0" prefWidth="100.0" text="Save">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -96,7 +96,7 @@
                         <Insets left="20.0" right="20.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="buttonWakeUp11" mnemonicParsing="false" onAction="#onClick" prefHeight="20.0" prefWidth="100.0" text="Delete">
+                  <Button fx:id="buttonWakeUp11" mnemonicParsing="false" onAction="#deletePressed" prefHeight="20.0" prefWidth="100.0" text="Delete">
                      <HBox.margin>
                         <Insets left="20.0" right="20.0" />
                      </HBox.margin>

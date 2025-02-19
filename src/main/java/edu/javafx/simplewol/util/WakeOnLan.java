@@ -5,18 +5,25 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 /**
- * Clase que envía un Magic Packet a través de la red para encender un equipo remoto mediante Wake-on-LAN.
+ * Clase que envía un Magic Packet a través de la red para encender un equipo remoto mediante
+ * Wake-on-LAN.
  */
-public class WakeOnLan {
-  private static final int PORT = 9; // Puerto estándar para Magic Packets
+public class WakeOnLan { // Puerto estándar para Magic Packets
+
+  private WakeOnLan() {
+    throw new IllegalStateException("Utility class");
+  }
 
   /**
-   * Método que envía un Magic Packet a través de la red para encender un equipo remoto mediante Wake-on-LAN.
+   * Método que envía un Magic Packet a través de la red para encender un equipo remoto mediante
+   * Wake-on-LAN.
+   *
    * @param macAddress
    * @param broadcastIP
    * @throws Exception
    */
-  public static void sendMagicPacket(String macAddress, String broadcastIP) throws Exception {
+  public static void sendMagicPacket(String macAddress, String broadcastIP, String port)
+      throws Exception {
     byte[] macBytes = getMacBytes(macAddress);
     byte[] magicPacket = new byte[102];
 
@@ -38,7 +45,8 @@ public class WakeOnLan {
      * DatagramPacket que se envía a través de un DatagramSocket usando UDP (User Datagram
      * Protocol).*
      */
-    DatagramPacket packet = new DatagramPacket(magicPacket, magicPacket.length, address, PORT);
+    DatagramPacket packet =
+        new DatagramPacket(magicPacket, magicPacket.length, address, Integer.parseInt(port));
     DatagramSocket socket = new DatagramSocket();
 
     try {
@@ -62,13 +70,5 @@ public class WakeOnLan {
       macBytes[i] = (byte) Integer.parseInt(hex[i], 16);
     }
     return macBytes;
-  }
-
-  public static void main(String[] args) {
-    try {
-      sendMagicPacket("04:42:1A:E9:46:19", "192.168.1.255"); // Cambia la MAC y la IP de broadcast
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
   }
 }
