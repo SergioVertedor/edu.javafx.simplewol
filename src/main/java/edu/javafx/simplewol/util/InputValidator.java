@@ -1,6 +1,6 @@
 package edu.javafx.simplewol.util;
 
-import edu.javafx.simplewol.model.MagickPacket;
+import edu.javafx.simplewol.model.MagicPacket;
 
 public class InputValidator {
 
@@ -39,4 +39,10 @@ public class InputValidator {
       throw new IllegalArgumentException("Invalid subnet mask");
     }
  }
+
+  public static void validateAlias(String alias) {
+    if (!alias.matches("^[a-zA-Z0-9_]+$")) {
+      throw new IllegalArgumentException("Invalid alias");
+    }
+  }
 }
