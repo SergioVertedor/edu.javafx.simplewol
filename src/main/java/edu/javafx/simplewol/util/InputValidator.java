@@ -1,48 +1,45 @@
 package edu.javafx.simplewol.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import edu.javafx.simplewol.model.MagicPacket;
 
 public class InputValidator {
 
-  private InputValidator() {
-    throw new IllegalStateException("Utility class");
-  }
+  public static List<String> errors = new ArrayList<>();
 
- public static void validateIp(String ip) {
-    if (!ip.matches(
-        "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$")) {
-      throw new IllegalArgumentException("Invalid IP address");
+  public void validateIp(String ip) {
+    String errorMessage = null;
+    if (!ip.matches("^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+        + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$")) {
+      errors.add("IP address is not valid");
     }
+
   }
 
-  public static void validateMac(String mac) {
+  public void validateMac(String mac) {
     if (!mac.matches("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$")) {
-      throw new IllegalArgumentException("Invalid MAC address");
-    }
+      errors.add("MAC address is not valid");
+    } ;
   }
 
-  public static void validatePort(String port) {
+  public void validatePort(String port) {
     if (!port.matches("^\\d+$")) {
-      throw new IllegalArgumentException("Invalid port number");
+      errors.add("Port number is not valid");
     }
   }
 
-  public static void validateSubnetMask(String subnetMask) {
-    if (!subnetMask.matches(
-        "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$")) {
-      throw new IllegalArgumentException("Invalid subnet mask");
+  public void validateSubnetMask(String subnetMask) {
+    if (!subnetMask
+        .matches("^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$")) {
+      errors.add("Subnet mask is not valid");
     }
- }
+  }
 
-  public static void validateAlias(String alias) {
-    if (!alias.matches("^[a-zA-Z0-9_]+$")) {
-      throw new IllegalArgumentException("Invalid alias");
+  public void validateAlias(String alias) {
+    if (!alias.matches("^[a-zA-Z0-9_ ]+$")) {
+      errors.add("Alias is not valid");
     }
   }
 }

@@ -5,10 +5,6 @@ import java.net.UnknownHostException;
 
 public class BroadcastCalc {
 
-    private BroadcastCalc() {
-    throw new IllegalStateException("Utility class");
-  }
-
   public static String calculateBroadcastAddress(String ipAddress, String subnetMask)
       throws UnknownHostException {
     byte[] ip = InetAddress.getByName(ipAddress).getAddress();

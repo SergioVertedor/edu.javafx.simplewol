@@ -13,8 +13,9 @@ public class MagicPacket {
   private String port;
   private String broadcastAddress;
 
-  public MagicPacket(String ip, String subnetMask, String mac, String magicPacketPort,
+  public MagicPacket(String alias, String ip, String subnetMask, String mac, String magicPacketPort,
       String broadcastAddress) {
+    this.alias = alias;
     this.ip = ip;
     this.subnetMask = subnetMask;
     this.mac = mac;
@@ -50,4 +51,15 @@ public class MagicPacket {
     this.alias = alias;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (!(o instanceof MagicPacket))
+      return false;
+    MagicPacket that = (MagicPacket) o;
+    return Objects.equals(alias, that.alias) && Objects.equals(ip, that.ip)
+        && Objects.equals(subnetMask, that.subnetMask) && Objects.equals(mac, that.mac)
+        && Objects.equals(port, that.port);
+  }
 }

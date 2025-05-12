@@ -3,9 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -13,32 +10,14 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="675.0" prefWidth="820.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.javafx.simplewol.controller.MainViewController">
-   <top>
-      <MenuBar BorderPane.alignment="CENTER">
-         <menus>
-            <Menu mnemonicParsing="false" text="File">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="Close" />
-               </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="Edit">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="Delete" />
-               </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="Help">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="About" />
-               </items>
-            </Menu>
-         </menus>
-      </MenuBar>
-   </top>
+<BorderPane prefHeight="559.0" prefWidth="694.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.javafx.simplewol.controller.MainViewController">
    <right>
-      <AnchorPane prefHeight="406.0" prefWidth="820.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="559.0" prefWidth="725.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="buttonWakeUp" layoutX="495.0" layoutY="146.0" mnemonicParsing="false" onAction="#wakeUpPressed" prefHeight="56.0" prefWidth="82.0" text="Wake Up!" />
+            <Button fx:id="buttonWakeUp" layoutX="398.0" layoutY="145.0" mnemonicParsing="false" onAction="#wakeUpPressed" prefHeight="90.0" prefWidth="120.0" text="Wake Up!">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font></Button>
             <TextField fx:id="textFieldIp" alignment="CENTER_RIGHT" layoutX="99.0" layoutY="47.0" prefHeight="45.0" prefWidth="200.0" promptText="000.000.000.000">
                <font>
                   <Font name="System Bold" size="20.0" />
@@ -78,19 +57,19 @@
                   <Font name="System Bold" size="20.0" />
                </font>
             </TextField>
-            <Button fx:id="buttonSave" layoutX="692.0" layoutY="447.0" mnemonicParsing="false" onAction="#savePressed" prefHeight="20.0" prefWidth="100.0" text="Save">
+            <Button fx:id="buttonSave" layoutX="613.0" layoutY="376.0" mnemonicParsing="false" onAction="#savePressed" prefHeight="20.0" prefWidth="100.0" text="Save">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
             </Button>
-            <Button fx:id="buttonDelete" layoutX="692.0" layoutY="515.0" mnemonicParsing="false" onAction="#deletePressed" prefHeight="20.0" prefWidth="100.0" text="Delete" />
-            <TableView fx:id="tabla" layoutX="24.0" layoutY="402.0" prefHeight="187.0" prefWidth="648.0">
+            <Button fx:id="buttonDelete" layoutX="613.0" layoutY="436.0" mnemonicParsing="false" onAction="#deletePressed" prefHeight="20.0" prefWidth="100.0" text="Delete" />
+            <TableView fx:id="tabla" layoutX="34.0" layoutY="325.0" minWidth="-Infinity" prefHeight="206.0" prefWidth="570.0">
               <columns>
-                <TableColumn fx:id="columnAlias" editable="false" minWidth="120.0" prefWidth="123.0" sortable="false" text="Alias" />
-                <TableColumn fx:id="columnIp" editable="false" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" sortable="false" text="IP" />
-                  <TableColumn fx:id="columnMac" editable="false" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" sortable="false" text="MAC" />
-                  <TableColumn fx:id="columnSubnetmask" editable="false" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" sortable="false" text="Subnet Mask" />
-                  <TableColumn fx:id="columnPort" editable="false" maxWidth="65.0" minWidth="65.0" prefWidth="65.0" sortable="false" text="Port" />
+                <TableColumn fx:id="columnAlias" editable="false" minWidth="-1.0" prefWidth="123.0" resizable="false" sortable="false" text="Alias" />
+                <TableColumn fx:id="columnIp" editable="false" maxWidth="120.0" minWidth="-1.0" prefWidth="120.0" resizable="false" sortable="false" text="IP" />
+                  <TableColumn fx:id="columnMac" editable="false" maxWidth="120.0" minWidth="-1.0" prefWidth="120.0" resizable="false" sortable="false" text="MAC" />
+                  <TableColumn fx:id="columnSubnetmask" editable="false" maxWidth="120.0" minWidth="-1.0" prefWidth="120.0" resizable="false" sortable="false" text="Subnet Mask" />
+                  <TableColumn fx:id="columnPort" editable="false" maxWidth="65.0" minWidth="-1.0" prefWidth="65.0" resizable="false" sortable="false" text="Port" />
               </columns>
             </TableView>
          </children>
