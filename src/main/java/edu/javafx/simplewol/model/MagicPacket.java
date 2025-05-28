@@ -1,6 +1,5 @@
 package edu.javafx.simplewol.model;
 
-import java.net.UnknownHostException;
 import java.util.Objects;
 
 /** This class represents a magic packet that is sent to a target device to wake it up. */
@@ -51,15 +50,41 @@ public class MagicPacket {
     this.alias = alias;
   }
 
+  public void setIp(String ip) {
+    this.ip = ip;
+  }
+
+  public void setSubnetMask(String subnetMask) {
+    this.subnetMask = subnetMask;
+  }
+
+  public void setMac(String mac) {
+    this.mac = mac;
+  }
+
+  public void setPort(String port) {
+    this.port = port;
+  }
+
+  public void setBroadcastAddress(String broadcastAddress) {
+    this.broadcastAddress = broadcastAddress;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o)
       return true;
-    if (!(o instanceof MagicPacket))
+    if (o == null || getClass() != o.getClass())
       return false;
     MagicPacket that = (MagicPacket) o;
     return Objects.equals(alias, that.alias) && Objects.equals(ip, that.ip)
         && Objects.equals(subnetMask, that.subnetMask) && Objects.equals(mac, that.mac)
         && Objects.equals(port, that.port);
   }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(alias, ip, subnetMask, mac, port);
+  }
+
 }

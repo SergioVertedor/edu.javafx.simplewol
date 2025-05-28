@@ -63,7 +63,7 @@
                </opaqueInsets>
             </Button>
             <Button fx:id="buttonDelete" layoutX="613.0" layoutY="436.0" mnemonicParsing="false" onAction="#deletePressed" prefHeight="20.0" prefWidth="100.0" text="Delete" />
-            <TableView fx:id="tabla" layoutX="34.0" layoutY="325.0" minWidth="-Infinity" prefHeight="206.0" prefWidth="570.0">
+            <TableView fx:id="tabla" editable="true" layoutX="34.0" layoutY="325.0" minWidth="-Infinity" prefHeight="206.0" prefWidth="570.0">
               <columns>
                 <TableColumn fx:id="columnAlias" editable="false" minWidth="-1.0" prefWidth="123.0" resizable="false" sortable="false" text="Alias" />
                 <TableColumn fx:id="columnIp" editable="false" maxWidth="120.0" minWidth="-1.0" prefWidth="120.0" resizable="false" sortable="false" text="IP" />

@@ -110,4 +110,23 @@ public class FileHandler {
       e.printStackTrace();
     }
   }
+
+  public void edit(MagicPacket oldMagicPacket, MagicPacket newMagicPacket) {
+    List<MagicPacket> lines = read();
+    int index = lines.indexOf(oldMagicPacket);
+    if (index != -1) {
+      lines.set(index, newMagicPacket);
+      try (FileWriter writer = new FileWriter(file)) {
+        for (MagicPacket line : lines) {
+          StringBuilder sb = new StringBuilder();
+          sb.append(line.getAlias()).append(";").append(line.getIp()).append(";")
+              .append(line.getSubnetMask()).append(";").append(line.getMac()).append(";")
+              .append(line.getPort()).append("\n");
+          writer.write(sb.toString());
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+  }
 }

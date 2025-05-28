@@ -2,6 +2,7 @@ package edu.javafx.simplewol.controller;
 
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import edu.javafx.simplewol.model.MagicPacket;
 import edu.javafx.simplewol.util.AlertHelper;
 import edu.javafx.simplewol.util.BroadcastCalc;
@@ -19,6 +20,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 
 public class MainViewController {
 
@@ -39,19 +41,19 @@ public class MainViewController {
   private TableView<MagicPacket> tabla;
 
   @FXML
-  private TableColumn<?, ?> columnAlias;
+  private TableColumn<MagicPacket, String> columnAlias;
 
   @FXML
-  private TableColumn<?, ?> columnIp;
+  private TableColumn<MagicPacket, String> columnIp;
 
   @FXML
-  private TableColumn<?, ?> columnMac;
+  private TableColumn<MagicPacket, String> columnMac;
 
   @FXML
-  private TableColumn<?, ?> columnPort;
+  private TableColumn<MagicPacket, String> columnPort;
 
   @FXML
-  private TableColumn<?, ?> columnSubnetmask;
+  private TableColumn<MagicPacket, String> columnSubnetmask;
 
   @FXML
   private TextField textFieldIp;
@@ -77,22 +79,25 @@ public class MainViewController {
   void savePressed(ActionEvent event) {
     try {
       String alias = AlertHelper.inputText(Constantes.REQUEST_ALIAS);
-      if (alias.length() > 0) {
-        InputValidator inputValidator = new InputValidator();
-        inputValidator.validateAlias(alias);
-        inputValidator.validateIp(textFieldIp.getText());
-        inputValidator.validateMac(textFieldMAC.getText());
-        inputValidator.validateSubnetMask(textFieldSubnetMask.getText());
-        inputValidator.validatePort(textFieldMagicPacketPort.getText());
-        StringBuilder sb = new StringBuilder();
-        for (String error : InputValidator.errors) {
-          sb.append(error).append("\n");
-        }
-        if (InputValidator.errors.size() > 0) {
-          AlertHelper.showAlert(sb.toString());
-          return;
-        }
+      if (alias == null) {
+        AlertHelper.showAlert(Constantes.ERROR_ALIAS);
+        return;
       }
+      InputValidator inputValidator = new InputValidator();
+      inputValidator.validateAlias(alias);
+      inputValidator.validateIp(textFieldIp.getText());
+      inputValidator.validateMac(textFieldMAC.getText());
+      inputValidator.validateSubnetMask(textFieldSubnetMask.getText());
+      inputValidator.validatePort(textFieldMagicPacketPort.getText());
+      StringBuilder sb = new StringBuilder();
+      for (String error : InputValidator.errors) {
+        sb.append(error).append("\n");
+      }
+      if (InputValidator.errors.size() > 0) {
+        AlertHelper.showAlert(sb.toString());
+        return;
+      }
+
       MagicPacket magicPacket = getMagickPacket();
       magicPacket.setAlias(alias);
       filas.add(magicPacket);
@@ -142,6 +147,8 @@ public class MainViewController {
 
   /**
    * Configure the table columns and their properties.
+   * 
+   * @throws UnknownHostException
    */
   private void configTable() {
     columnAlias.setCellValueFactory(new PropertyValueFactory<>("alias"));
@@ -149,18 +156,116 @@ public class MainViewController {
     columnMac.setCellValueFactory(new PropertyValueFactory<>("mac"));
     columnSubnetmask.setCellValueFactory(new PropertyValueFactory<>("subnetMask"));
     columnPort.setCellValueFactory(new PropertyValueFactory<>("port"));
+    columnAlias.setCellFactory(TextFieldTableCell.forTableColumn());
+    columnIp.setCellFactory(TextFieldTableCell.forTableColumn());
+    columnMac.setCellFactory(TextFieldTableCell.forTableColumn());
+    columnSubnetmask.setCellFactory(TextFieldTableCell.forTableColumn());
+    columnPort.setCellFactory(TextFieldTableCell.forTableColumn());
+    columnAlias.setEditable(true);
+    columnIp.setEditable(true);
+    columnMac.setEditable(true);
+    columnSubnetmask.setEditable(true);
+    columnPort.setEditable(true);
     tabla.setItems(filas);
+    tabla.setEditable(true);
     tabla.setPlaceholder(new Label(""));
+    setColumnEvents();
     loadTableData();
+  }
+
+  /**
+   * Set events for the table columns.
+   */
+  private void setColumnEvents() {
+
+    AtomicReference<MagicPacket> oldPacketRef = new AtomicReference<MagicPacket>();
+    InputValidator inputValidator = new InputValidator();
+    FileHandler fileHandler = new FileHandler();
+
+    tabla.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
+      if (newSel != null) {
+
+        try {
+          oldPacketRef.set(new MagicPacket(newSel.getAlias(), newSel.getIp(),
+              newSel.getSubnetMask(), newSel.getMac(), newSel.getPort(),
+              BroadcastCalc.calculateBroadcastAddress(newSel.getIp(), newSel.getSubnetMask())));
+        } catch (UnknownHostException e) {
+          AlertHelper.showAlert(
+              "Error calculating broadcast address with the selected IP and subnet mask.");
+          oldPacketRef.set(null);
+          return;
+        }
+        textFieldIp.setText(newSel.getIp());
+        textFieldMAC.setText(newSel.getMac());
+        textFieldSubnetMask.setText(newSel.getSubnetMask());
+        textFieldMagicPacketPort.setText(String.valueOf(newSel.getPort()));
+      }
+    });
+
+
+    columnAlias.setOnEditCommit(event -> {
+      MagicPacket packet = event.getRowValue();
+      if (inputValidator.validateAlias(event.getNewValue())) {
+        AlertHelper.showAlert(Constantes.ERROR_ALIAS);
+        return;
+      }
+      packet.setAlias(event.getNewValue());
+      
+      fileHandler.edit(oldPacketRef.get(), packet);
+    });
+    
+    columnIp.setOnEditCommit(event -> {
+      MagicPacket packet = event.getRowValue();
+      packet.setIp(event.getNewValue());
+      if (!inputValidator.validateIp(packet.getIp())) {
+        AlertHelper.showAlert(Constantes.ERROR_IP);
+        // se restaura el valor anterior
+        //TODO
+        columnIp.setOnEditCancel(e -> {
+          packet.setIp(oldPacketRef.get().getIp());
+        });
+        return;
+      }
+      fileHandler.edit(oldPacketRef.get(), packet);
+
+    });
+
+    columnMac.setOnEditCommit(event -> {
+      MagicPacket packet = event.getRowValue();
+      packet.setMac(event.getNewValue());
+      if (!inputValidator.validateMac(packet.getMac())) {
+        AlertHelper.showAlert(Constantes.ERROR_MAC);
+        return;
+      }
+      fileHandler.edit(oldPacketRef.get(), packet);
+
+    });
+    columnSubnetmask.setOnEditCommit(event -> {
+      MagicPacket packet = event.getRowValue();
+      packet.setSubnetMask(event.getNewValue());
+      if (!inputValidator.validateSubnetMask(packet.getSubnetMask())) {
+        AlertHelper.showAlert(Constantes.ERROR_SUBNET_MASK);
+        return;
+      }
+      fileHandler.edit(oldPacketRef.get(), packet);
+
+    });
+    columnPort.setOnEditCommit(event -> {
+      MagicPacket packet = event.getRowValue();
+      packet.setPort(event.getNewValue());
+      if (!inputValidator.validatePort(packet.getPort())) {
+        AlertHelper.showAlert(Constantes.ERROR_PORT);
+        return;
+      }
+      fileHandler.edit(oldPacketRef.get(), packet);
+    });
   }
 
   /**
    * Load the table data from the file.
    */
   private void loadTableData() {
-    for (MagicPacket magicPacket : tableMagicPackets) {
-      filas.add(magicPacket);
-    }
+    tableMagicPackets.forEach(magicPacket -> filas.add(magicPacket));
   }
 
   /**
