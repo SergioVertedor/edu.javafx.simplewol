@@ -67,6 +67,11 @@ public class MainViewController {
   @FXML
   private TextField textFieldSubnetMask;
 
+  /**
+   * Elimina el MagicPacket seleccionado de la tabla y del archivo.
+   * 
+   * @param event
+   */
   @FXML
   void deletePressed(ActionEvent event) {
     FileHandler fileHandler = new FileHandler();
@@ -75,6 +80,11 @@ public class MainViewController {
     filas.remove(magicPacket);
   }
 
+  /**
+   * Muestra un cuadro de diálogo para ingresar un alias y guarda el MagicPacket en el archivo.
+   * 
+   * @param event
+   */
   @FXML
   void savePressed(ActionEvent event) {
     try {
@@ -109,7 +119,7 @@ public class MainViewController {
   }
 
   /**
-   * Send the magic packet to the target device.
+   * Envia el paquete mágico al dispositivo de destino.
    *
    * @param event
    * @throws Exception
@@ -129,8 +139,9 @@ public class MainViewController {
         StringBuilder sb = new StringBuilder();
         for (String error : InputValidator.errors) {
           sb.append(error).append("\n");
+          AlertHelper.showAlert(sb.toString());
+          return;
         }
-        AlertHelper.showAlert(sb.toString());
       }
     } catch (Exception e) {
       AlertHelper.showAlert(e.getMessage());
@@ -146,7 +157,7 @@ public class MainViewController {
   }
 
   /**
-   * Configure the table columns and their properties.
+   * Configura la tabla de MagicPackets y sus propiedades.
    * 
    * @throws UnknownHostException
    */
@@ -174,7 +185,7 @@ public class MainViewController {
   }
 
   /**
-   * Set events for the table columns.
+   * Setea los eventos de las columnas de la tabla.
    */
   private void setColumnEvents() {
 
@@ -184,17 +195,10 @@ public class MainViewController {
 
     tabla.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
       if (newSel != null) {
+        oldPacketRef.set(new MagicPacket(newSel.getAlias(), newSel.getIp(), newSel.getSubnetMask(),
+            newSel.getMac(), newSel.getPort(),
+            BroadcastCalc.calculateBroadcastAddress(newSel.getIp(), newSel.getSubnetMask())));
 
-        try {
-          oldPacketRef.set(new MagicPacket(newSel.getAlias(), newSel.getIp(),
-              newSel.getSubnetMask(), newSel.getMac(), newSel.getPort(),
-              BroadcastCalc.calculateBroadcastAddress(newSel.getIp(), newSel.getSubnetMask())));
-        } catch (UnknownHostException e) {
-          AlertHelper.showAlert(
-              "Error calculating broadcast address with the selected IP and subnet mask.");
-          oldPacketRef.set(null);
-          return;
-        }
         textFieldIp.setText(newSel.getIp());
         textFieldMAC.setText(newSel.getMac());
         textFieldSubnetMask.setText(newSel.getSubnetMask());
@@ -210,20 +214,21 @@ public class MainViewController {
         return;
       }
       packet.setAlias(event.getNewValue());
-      
+
       fileHandler.edit(oldPacketRef.get(), packet);
     });
-    
+
     columnIp.setOnEditCommit(event -> {
       MagicPacket packet = event.getRowValue();
+      oldPacketRef.set(new MagicPacket(packet.getAlias(), packet.getIp(), packet.getSubnetMask(),
+          packet.getMac(), packet.getPort(),
+          BroadcastCalc.calculateBroadcastAddress(packet.getIp(), packet.getSubnetMask())));
+
       packet.setIp(event.getNewValue());
       if (!inputValidator.validateIp(packet.getIp())) {
         AlertHelper.showAlert(Constantes.ERROR_IP);
-        // se restaura el valor anterior
-        //TODO
-        columnIp.setOnEditCancel(e -> {
-          packet.setIp(oldPacketRef.get().getIp());
-        });
+        packet.setIp(oldPacketRef.get().getIp());
+        tabla.refresh();
         return;
       }
       fileHandler.edit(oldPacketRef.get(), packet);
@@ -262,14 +267,14 @@ public class MainViewController {
   }
 
   /**
-   * Load the table data from the file.
+   * Carga los datos de la tabla desde el archivo.
    */
   private void loadTableData() {
     tableMagicPackets.forEach(magicPacket -> filas.add(magicPacket));
   }
 
   /**
-   * Get the MagickPacket object from the text fields.
+   * Obtiene el objeto MagickPacket de los campos de texto.
    *
    * @return
    * @throws UnknownHostException

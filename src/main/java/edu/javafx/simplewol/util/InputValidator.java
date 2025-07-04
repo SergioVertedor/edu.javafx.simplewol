@@ -45,7 +45,7 @@ public class InputValidator {
   }
 
   public boolean validateAlias(String alias) {
-    if (!alias.matches("^[a-zA-Z0-9_ ]+$")) {
+    if (!alias.matches("^[a-zA-Z0-9_ -]+$")) {
       errors.add("Alias is not valid");
       return false;
     }

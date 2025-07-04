@@ -18,7 +18,7 @@ public class FileHandler {
   }
 
   /**
-   * Creates a new file if it does not exist.
+   * Crea el fichero si no existe.
    */
   public void create() {
     if (!file.exists()) {
@@ -31,7 +31,7 @@ public class FileHandler {
   }
 
   /**
-   * Writes a MagicPacket object to a file.
+   * Escribe el MagicPacket en el fichero.
    * 
    * @param magicPacket
    */
@@ -48,7 +48,7 @@ public class FileHandler {
   }
 
   /**
-   * Reads the file line by line and creates MagicPacket objects.
+   * Lee el fichero y devuelve una lista de MagicPacket.
    * 
    * @return
    */
@@ -93,7 +93,7 @@ public class FileHandler {
   }
 
   /**
-   * Deletes the line from MagicPacket selected on table.
+   * Elimina la línea del MagicPacket seleccionado en la tabla.
    */
   public void delete(MagicPacket magicPacket) {
     List<MagicPacket> lines = read();

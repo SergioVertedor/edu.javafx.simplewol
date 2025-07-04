@@ -17,5 +17,7 @@ public class Constantes {
   public static final String ERROR_PORT = "Port must be a number between 1 and 65535.";
   
   public static final String ERROR_SUBNET_MASK = "Invalid subnet mask format.";
+  
+  public static final String ERROR_BROADCAST = "Invalid broadcast address format.";
 
 }
